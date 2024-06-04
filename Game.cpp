@@ -6,10 +6,30 @@ Game::Game() : whiteTurn(true) {}
 void Game::play() {
     while (true) {
         displayBoard();
-        handleUserInput();
-        switchTurn();
+        std::cout << "Your turn " << (whiteTurn ? "White" : "Black") << std::endl;
+        int userInput = handleUserInput();
+        if (userInput == 0) {
+            break; // Koniec gry, jeśli gracz zrezygnował
+        }
+        else if (userInput == 1){
+            switchTurn();   //Dopuszczalny ruch -> teraz przeciwnik
+        }
+
+
+/*
+        //Szach-mat lub pat
+        if (board.isCheckmate(whiteTurn)) {
+            std::cout << "Checkmate! ";
+            std::cout << (whiteTurn ? "Black" : "White") << " wins.\n";
+            break; // Zakończ grę po szach-macie
+        } else if (board.isStalemate(whiteTurn)) {
+            std::cout << "Stalemate! The game ends in a draw.\n";
+            break; // Zakończ grę po remisie (pat)
+        }
+        */
     }
 }
+
 
 void Game::displayBoard() const {
     std::cout << "  ";
@@ -21,14 +41,14 @@ void Game::displayBoard() const {
             if (piece) {
                 std::cout << piece->getSymbol() << "  ";
             } else {
-                std::cout << ".  ";
+                std::cout << "-  "; //Puste pola na szachownicy
             }
         }
         std::cout << std::endl;
     }
 }
 
-std::vector<int> convertToInt(const std::string& input){
+std::vector<int> convertToInt(const std::string& input){    //konwertuje ruchy gracza do używanych przez program indexów tabeli
     std::vector<int> toReturn;
 
     const char letters[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
@@ -51,27 +71,55 @@ std::vector<int> convertToInt(const std::string& input){
     return toReturn;
 }
 
-void Game::handleUserInput() {
+int Game::handleUserInput() {
     std::string moveChars;
     int startX, startY, endX, endY;
+
     std::cout << "Your move: ";
     std::cin >> moveChars;
 
-    std::vector<int> converted = convertToInt(moveChars);
-
-    startX = converted[0];
-    startY = converted[1];
-    endX = converted[2];
-    endY = converted[3];
-
-    Piece* piece = board.getPieceAt(startX, startY);
-    if (piece && piece->isWhite() == whiteTurn && piece->isValidMove(startX, startY, endX, endY, board)) {
-        board.movePiece(startX, startY, endX, endY);
-    } else {
-        std::cout << "Invalid move. Try again." << std::endl;
+    if (moveChars == "quit") {
+        board.movePiece(-1, -1, -1, -1); //Rezygnacja w gry poprzez wpisanie quit
+        return 0;
     }
+    else {
+        std::vector<int> converted = convertToInt(moveChars);
 
+        startX = converted[0];
+        startY = converted[1];
+        endX = converted[2];
+        endY = converted[3];
+
+        Piece *piece = board.getPieceAt(startX, startY);
+        Piece *targetPiece = board.getPieceAt(endX, endY);
+        if (piece && piece->isWhite() == whiteTurn && piece->isValidMove(startX, startY, endX, endY, board)) {  //ruch jest możliwy gdy pierwsza pozycja ma fiurę należącą do danego gracza i można nią wykonać podany ruch
+            if (dynamic_cast<King*>(targetPiece) && targetPiece->isWhite() != whiteTurn) {
+                std::cout << "You cannot capture the king!\n";
+                return 2; // Nieprawidłowy ruch (próba zbijania króla)
+            }
+            else if(board.isInCheck(piece->isWhite())){ //król gracza pod szachem -> ruch musi usunąć szach
+                if(board.unChecked(piece->isWhite(), startX, startY, endX, endY)) {
+                    board.movePiece(startX, startY, endX, endY);
+                    return 1;
+                }
+                else{
+                    std::cout << "This move leaves kings under check!" << std::endl;
+                    return 2;
+                }
+
+            }
+            else{
+                board.movePiece(startX, startY, endX, endY);
+                if(board.isInCheck(!piece->isWhite())) std::cout << "Check!" << std::endl;
+                return 1;
+            }
+        } else {
+            std::cout << "Invalid move. Try again." << std::endl;
+            return 2;
+        }
+    }
 }
+
 
 void Game::switchTurn() {
     whiteTurn = !whiteTurn;

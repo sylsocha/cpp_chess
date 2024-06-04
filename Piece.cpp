@@ -1,35 +1,34 @@
 #include "Piece.h"
 #include "ChessBoard.h"
 
-// Implementacja metody isValidMove dla pionka
 bool Pawn::isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const {
     int direction = white ? 1 : -1;
     if (startX == endX && board.getPieceAt(endX, endY) == nullptr) {
-        // Move forward by one square
+        //Do przodu o 1
         if (endY == startY + direction) {
             return true;
         }
-        // Move forward by two squares from the starting position
+        //Do przodu o 2 ze startu
         if ((white && startY == 1 || !white && startY == 6) && endY == startY + 2 * direction && board.getPieceAt(endX, startY + direction) == nullptr) {
             return true;
         }
     }
-    // Capture diagonally
+    //Bicie na skos
     if (abs(startX - endX) == 1 && endY == startY + direction && board.getPieceAt(endX, endY) != nullptr && board.getPieceAt(endX, endY)->isWhite() != white) {
         return true;
     }
     return false;
 }
 
-// Implementacja metody isValidMove dla wieży
+
 bool Rook::isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const {
-    if (startX != endX && startY != endY) return false; // Must move in a straight line
+    if (startX != endX && startY != endY) return false;
     int stepX = (endX - startX) ? (endX - startX) / abs(endX - startX) : 0;
     int stepY = (endY - startY) ? (endY - startY) / abs(endY - startY) : 0;
     int x = startX + stepX;
     int y = startY + stepY;
     while (x != endX || y != endY) {
-        if (board.getPieceAt(x, y) != nullptr) return false; // Path must be clear
+        if (board.getPieceAt(x, y) != nullptr) return false;//Czy nic nie stoi na drodze
         x += stepX;
         y += stepY;
     }
@@ -39,7 +38,7 @@ bool Rook::isValidMove(int startX, int startY, int endX, int endY, const ChessBo
     return false;
 }
 
-// Implementacja metody isValidMove dla skoczka
+
 bool Knight::isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const {
     int dx = abs(startX - endX);
     int dy = abs(startY - endY);

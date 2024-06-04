@@ -11,5 +11,4 @@ add_executable(cpp_chess
         Piece.cpp
         Game.h
         Game.cpp
-        Save.h
-        Save.cpp)
+)

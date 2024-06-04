@@ -12,7 +12,7 @@ private:
     ChessBoard board;
     bool whiteTurn;
     void displayBoard() const;
-    void handleUserInput();
+    int handleUserInput();
     void switchTurn();
 };
 

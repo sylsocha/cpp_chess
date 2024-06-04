@@ -11,7 +11,11 @@ public:
 
     void initializeBoard();
     Piece* getPieceAt(int x, int y) const;
-    bool movePiece(int startX, int startY, int endX, int endY);
+    void movePiece(int startX, int startY, int endX, int endY);
+    bool isInCheck(bool white) const;
+    bool unChecked(bool white, int startX, int startY, int endX, int endY) const;
+    bool isCheckmate(bool white) const;
+    bool isStalemate(bool white) const;
 
 private:
     std::vector<std::vector<Piece*>> board;

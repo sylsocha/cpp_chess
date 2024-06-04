@@ -6,7 +6,7 @@ class ChessBoard;
 
 class Piece {
 public:
-    virtual ~Piece() {}
+    virtual ~Piece() = default;
     virtual bool isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const = 0;
     virtual std::string getName() const = 0;
     virtual std::string getSymbol() const = 0;
@@ -15,15 +15,15 @@ public:
 
 
 protected:
-    Piece(bool isWhite) : white(isWhite) {}
+    explicit Piece(bool isWhite) : white(isWhite) {}
     bool white;
-    int posX;
-    int posY;
+    int posX{};
+    int posY{};
 };
 
 class Pawn : public Piece {
 public:
-    Pawn(bool isWhite) : Piece(isWhite) {}
+    explicit Pawn(bool isWhite) : Piece(isWhite) {}
     bool isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const override;
     std::string getName() const override { return "Pawn"; }
     std::string getSymbol() const override { return white ? "P" : "p"; }
@@ -31,7 +31,7 @@ public:
 
 class Rook : public Piece {
 public:
-    Rook(bool isWhite) : Piece(isWhite) {}
+    explicit Rook(bool isWhite) : Piece(isWhite) {}
     bool isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const override;
     std::string getName() const override { return "Rook"; }
     std::string getSymbol() const override { return white ? "R" : "r"; }
@@ -39,7 +39,7 @@ public:
 
 class Knight : public Piece {
 public:
-    Knight(bool isWhite) : Piece(isWhite) {}
+    explicit Knight(bool isWhite) : Piece(isWhite) {}
     bool isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const override;
     std::string getName() const override { return "Knight"; }
     std::string getSymbol() const override { return white ? "N" : "n"; }
@@ -47,7 +47,7 @@ public:
 
 class Bishop : public Piece {
 public:
-    Bishop(bool isWhite) : Piece(isWhite) {}
+    explicit Bishop(bool isWhite) : Piece(isWhite) {}
     bool isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const override;
     std::string getName() const override { return "Bishop"; }
     std::string getSymbol() const override { return white ? "B" : "b"; }
@@ -55,7 +55,7 @@ public:
 
 class Queen : public Piece {
 public:
-    Queen(bool isWhite) : Piece(isWhite) {}
+    explicit Queen(bool isWhite) : Piece(isWhite) {}
     bool isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const override;
     std::string getName() const override { return "Queen"; }
     std::string getSymbol() const override { return white ? "Q" : "q"; }
@@ -63,7 +63,7 @@ public:
 
 class King : public Piece {
 public:
-    King(bool isWhite) : Piece(isWhite) {}
+    explicit King(bool isWhite) : Piece(isWhite) {}
     bool isValidMove(int startX, int startY, int endX, int endY, const ChessBoard& board) const override;
     std::string getName() const override { return "King"; }
     std::string getSymbol() const override { return white ? "K" : "k"; }
