@@ -15,7 +15,6 @@ public:
     bool isInCheck(bool white) const;
     bool unChecked(bool white, int startX, int startY, int endX, int endY) const;
     bool isCheckmate(bool white) const;
-    bool isStalemate(bool white) const;
 
 private:
     std::vector<std::vector<Piece*>> board;

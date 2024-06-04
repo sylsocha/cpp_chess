@@ -149,44 +149,12 @@ bool ChessBoard::unChecked(bool white, int startX, int startY, int endX, int end
     // Sprawdzenie, czy król nadal jest w szachu
     std::cout << tempBoard.isInCheck(white);
 
-
     return false;
-
 }
 
 
 bool ChessBoard::isCheckmate(bool white) const {
     if (!isInCheck(white)) {
-        return false;
-    }
-
-    for (int y = 0; y < 8; ++y) {
-        for (int x = 0; x < 8; ++x) {
-            Piece* piece = board[y][x];
-            if (piece != nullptr && piece->isWhite() == white) {
-                for (int newY = 0; newY < 8; ++newY) {
-                    for (int newX = 0; newX < 8; ++newX) {
-                        if (piece->isValidMove(x, y, newX, newY, *this)) {
-                            // Kopia planszy
-                            ChessBoard tempBoard = *this;
-                            tempBoard.board[newY][newX] = tempBoard.board[y][x];
-                            tempBoard.board[y][x] = nullptr;
-
-                            // Sprawdzenie, czy król nadal jest w szachu
-                            if (!tempBoard.isInCheck(white)) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return true;
-}
-
-bool ChessBoard::isStalemate(bool white) const {
-    if (isInCheck(white)) {
         return false;
     }
 

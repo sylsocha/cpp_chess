@@ -17,14 +17,11 @@ void Game::play() {
 
 
 /*
-        //Szach-mat lub pat
+        //Szach-mat
         if (board.isCheckmate(whiteTurn)) {
             std::cout << "Checkmate! ";
             std::cout << (whiteTurn ? "Black" : "White") << " wins.\n";
             break; // Zakończ grę po szach-macie
-        } else if (board.isStalemate(whiteTurn)) {
-            std::cout << "Stalemate! The game ends in a draw.\n";
-            break; // Zakończ grę po remisie (pat)
         }
         */
     }
